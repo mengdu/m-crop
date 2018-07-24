@@ -2,6 +2,8 @@
 
 Vue 简单的图片区域裁切组件。
 
+> 插件尚未发布到 npm, 现在你可以 `npm install git+https://github.com/mengdu/m-crop.git` 安装体验
+
 ```html
 <m-crop ref="crop"
     :src="cropConf.src"
@@ -62,9 +64,13 @@ export default {
 | getClip     | 无  | Cutter对象 | 返回裁剪 Cutter 对象  |
 
 
+> 对于非同源的图片，可以使用 `getCutInfo` 获取裁剪信息，然后通过后端进行图片裁切操作
+
 ## Cutter
 
 Cutter 是一个图片处理对象，基于 canvas API 实现对图片的处理。
+
+> canvas API 不支持对非同源图片的操作，远程图片，请把图片放到同域下操作。
 
 | 方法      | 参数    | 返回值      | 说明       |
 |---------- |-------- |---------- |-------------  |
