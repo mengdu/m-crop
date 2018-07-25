@@ -26,11 +26,13 @@
         :ctrl-height="cropConf.ctrlHeight"
         :ctrl-left="cropConf.ctrlLeft"
         :ctrl-top="cropConf.ctrlTop"
+        :lock-view-size="cropConf.lockViewSize"
         ></m-crop>
       <div style="padding: 15px;">
         <label><input type="checkbox" v-model="cropConf.auto">自由裁剪</label>
         <label><input type="checkbox" v-model="cropConf.showView">显示裁剪区</label>
         <label><input type="checkbox" v-model="cropConf.showCtrl">显示裁剪控制按钮</label>
+        <label><input type="checkbox" v-model="cropConf.lockViewSize">锁定尺寸</label>
         <p>
           <label>宽：<input type="number" class="m-form-control" v-model="cropConf.ctrlWidth"></label>
           <label>高：<input type="number" class="m-form-control" v-model="cropConf.ctrlHeight"></label>
@@ -108,7 +110,8 @@ export default {
         ctrlWidth: 200,
         ctrlHeight: 200,
         ctrlLeft: 0,
-        ctrlTop: 0
+        ctrlTop: 0,
+        lockViewSize: false
       }
     }
   },
