@@ -18,7 +18,7 @@
     >
     <!-- 裁剪区 -->
     <div class="cut-view"
-      v-show="showSelection"
+      v-show="showSelection && loaded"
       :style="{
         width: viewWidth + 'px',
         height: viewHeight + 'px',
@@ -48,10 +48,6 @@
       ref="view"
       >
       <template>
-      <div class="cut-c-line cut-l-left"></div>
-      <div class="cut-c-line cut-l-top"></div>
-      <div class="cut-c-line cut-l-right"></div>
-      <div class="cut-c-line cut-l-bottom"></div>
       <div @mousedown.stop.prevent="ctrlClick">
         <template v-if="showCtrl">
         <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'"></div>
@@ -97,7 +93,8 @@ export default {
     selectionTitle: {
       type: String,
       default: '点击选择图片'
-    }
+    },
+    lockViewSize: Boolean
   },
   data () {
     return {
@@ -166,6 +163,7 @@ export default {
   },
   methods: {
     selection (e) {
+      if (this.lockViewSize) return false
       const target = e
       const that = this
       const start = {
@@ -205,6 +203,7 @@ export default {
         this.vt = offsetY + this.startPoint.top
         this.setViewPos()
       } else if (this.moveType === 'size') {
+        if (this.lockViewSize) return false
         // 改变尺寸
         // console.log('size change')
         switch (this.direction) {
