@@ -169,6 +169,11 @@ export default {
       if (this.lockViewSize) return false
       const target = e
       const that = this
+      if(!e.offsetX) {
+        let clientRect = e.target.getBoundingClientRect()
+        e.offsetX = e.clientX - clientRect.x
+        e.offsetY = e.clientY - clientRect.y
+      }
       const start = {
         clientX: e.clientX,
         clientY: e.clientY,
