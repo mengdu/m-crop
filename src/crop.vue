@@ -50,14 +50,14 @@
       <template>
       <div @mousedown.stop.prevent="ctrlClick">
         <template v-if="showCtrl">
-        <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'"></div>
-        <div class="cut-c-point cut-p-center-top" @mousedown="direction = 'top'"></div>
-        <div class="cut-c-point cut-p-right-top" @mousedown="direction = 'right-top'"></div>
-        <div class="cut-c-point cut-p-right-middle" @mousedown="direction = 'right'"></div>
-        <div class="cut-c-point cut-p-left-middle" @mousedown="direction = 'left'"></div>
-        <div class="cut-c-point cut-p-right-bottom" @mousedown="direction = 'right-bottom'"></div>
-        <div class="cut-c-point cut-p-center-bottom" @mousedown="direction = 'bottom'"></div>
-        <div class="cut-c-point cut-p-left-bottom" @mousedown="direction = 'left-bottom'"></div>
+        <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'" @touchstart="direction = 'left-top'"></div>
+        <div class="cut-c-point cut-p-center-top" @mousedown="direction = 'top'" @touchstart="direction = 'top'"></div>
+        <div class="cut-c-point cut-p-right-top" @mousedown="direction = 'right-top'" @touchstart="direction = 'right-top'"></div>
+        <div class="cut-c-point cut-p-right-middle" @mousedown="direction = 'right'" @touchstart="direction = 'right'"></div>
+        <div class="cut-c-point cut-p-left-middle" @mousedown="direction = 'left'" @touchstart="direction = 'left'"></div>
+        <div class="cut-c-point cut-p-right-bottom" @mousedown="direction = 'right-bottom'" @touchstart="direction = 'right-bottom'"></div>
+        <div class="cut-c-point cut-p-center-bottom" @mousedown="direction = 'bottom'" @touchstart="direction = 'bottom'"></div>
+        <div class="cut-c-point cut-p-left-bottom" @mousedown="direction = 'left-bottom'" @touchstart="direction = 'left-bottom'"></div>
         </template>
       </div>
       </template>
@@ -189,9 +189,13 @@ export default {
       function mouseup () {
         target.target.removeEventListener('mousemove', move)
         target.target.removeEventListener('mouseup', mouseup)
+        target.target.removeEventListener('touchmove', move)
+        target.target.removeEventListener('touchend', mouseup)
       }
       target.target.addEventListener('mousemove', move, false)
       target.target.addEventListener('mouseup', mouseup, false)
+      target.target.addEventListener('touchmove', move, false)
+      target.target.addEventListener('touchend', mouseup, false)
     },
     handleMove (e) {
       // console.log('move', e)
@@ -264,9 +268,13 @@ export default {
         })
         document.removeEventListener('mousemove', that.handleMove)
         document.removeEventListener('mouseup', mouseup)
+        document.removeEventListener('touchmove', that.handleMove)
+        document.removeEventListener('touchend', mouseup)
       }
       document.addEventListener('mousemove', this.handleMove, false)
       document.addEventListener('mouseup', mouseup, false)
+      document.addEventListener('touchmove', this.handleMove, false)
+      document.addEventListener('touchend', mouseup, false)
     },
     viewClick (e) {
       // console.log('view click')
