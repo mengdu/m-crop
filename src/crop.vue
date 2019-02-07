@@ -15,6 +15,7 @@
   <div class="cut-control-bg"
     v-show="loaded"
     @mousedown.stop.prevent="selection"
+    @touchstart.stop.prevent="selection"
     >
     <!-- 裁剪区 -->
     <div class="cut-view"
@@ -39,6 +40,7 @@
     <div class="cut-control"
       v-show="showSelection"
       @mousedown.stop.prevent="viewClick"
+      @touchstart.stop.prevent="viewClick"
       :style="{
         width: viewWidth + 'px',
         height: viewHeight + 'px',
@@ -48,7 +50,7 @@
       ref="view"
       >
       <template>
-      <div @mousedown.stop.prevent="ctrlClick">
+      <div @mousedown.stop.prevent="ctrlClick" @touchstart.stop.prevent="ctrlClick">
         <template v-if="showCtrl">
         <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'" @touchstart="direction = 'left-top'"></div>
         <div class="cut-c-point cut-p-center-top" @mousedown="direction = 'top'" @touchstart="direction = 'top'"></div>
