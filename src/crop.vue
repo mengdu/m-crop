@@ -165,6 +165,7 @@ export default {
   },
   methods: {
     selection (e) {
+      e = e.touches ? e.touches[0] : e;
       if (this.lockViewSize) return false
       const target = e
       const that = this
@@ -176,6 +177,7 @@ export default {
       }
       // console.log('selection', e.offsetX, e.offsetY)
       function move (e) {
+        e = e.touches ? e.touches[0] : e;
         that.showSelection = true
         const offsetX = e.clientX - start.clientX
         const offsetY = e.clientY - start.clientY
@@ -201,6 +203,7 @@ export default {
     },
     handleMove (e) {
       // console.log('move', e)
+      e = e.touches ? e.touches[0] : e;
       var offsetX = e.clientX - this.startPoint.clientX
       var offsetY = e.clientY - this.startPoint.clientY
       // 移动视区
@@ -252,6 +255,7 @@ export default {
     },
     contrlClick (e) {
       // 记录鼠标按下点信息
+      e = e.touches ? e.touches[0] : e;
       this.startPoint = {
         clientX: e.clientX,
         clientY: e.clientY,
@@ -280,12 +284,14 @@ export default {
     },
     viewClick (e) {
       // console.log('view click')
+      e = e.touches ? e.touches[0] : e;
       this.moveType = 'move'
       this.contrlClick(e)
     },
     ctrlClick (e) {
       // console.log('ctrl click', this.direction)
       this.moveType = 'size'
+      e = e.touches ? e.touches[0] : e;
       this.contrlClick(e)
     },
     getCutInfo () {
