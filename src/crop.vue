@@ -15,6 +15,7 @@
   <div class="cut-control-bg"
     v-show="loaded"
     @mousedown.stop.prevent="selection"
+    @touchstart.stop.prevent="selection"
     >
     <!-- 裁剪区 -->
     <div class="cut-view"
@@ -39,6 +40,7 @@
     <div class="cut-control"
       v-show="showSelection"
       @mousedown.stop.prevent="viewClick"
+      @touchstart.stop.prevent="viewClick"
       :style="{
         width: viewWidth + 'px',
         height: viewHeight + 'px',
@@ -48,16 +50,16 @@
       ref="view"
       >
       <template>
-      <div @mousedown.stop.prevent="ctrlClick">
+      <div @mousedown.stop.prevent="ctrlClick" @touchstart.stop.prevent="ctrlClick">
         <template v-if="showCtrl">
-        <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'"></div>
-        <div class="cut-c-point cut-p-center-top" @mousedown="direction = 'top'"></div>
-        <div class="cut-c-point cut-p-right-top" @mousedown="direction = 'right-top'"></div>
-        <div class="cut-c-point cut-p-right-middle" @mousedown="direction = 'right'"></div>
-        <div class="cut-c-point cut-p-left-middle" @mousedown="direction = 'left'"></div>
-        <div class="cut-c-point cut-p-right-bottom" @mousedown="direction = 'right-bottom'"></div>
-        <div class="cut-c-point cut-p-center-bottom" @mousedown="direction = 'bottom'"></div>
-        <div class="cut-c-point cut-p-left-bottom" @mousedown="direction = 'left-bottom'"></div>
+        <div class="cut-c-point cut-p-left-top" @mousedown="direction = 'left-top'" @touchstart="direction = 'left-top'"></div>
+        <div class="cut-c-point cut-p-center-top" @mousedown="direction = 'top'" @touchstart="direction = 'top'"></div>
+        <div class="cut-c-point cut-p-right-top" @mousedown="direction = 'right-top'" @touchstart="direction = 'right-top'"></div>
+        <div class="cut-c-point cut-p-right-middle" @mousedown="direction = 'right'" @touchstart="direction = 'right'"></div>
+        <div class="cut-c-point cut-p-left-middle" @mousedown="direction = 'left'" @touchstart="direction = 'left'"></div>
+        <div class="cut-c-point cut-p-right-bottom" @mousedown="direction = 'right-bottom'" @touchstart="direction = 'right-bottom'"></div>
+        <div class="cut-c-point cut-p-center-bottom" @mousedown="direction = 'bottom'" @touchstart="direction = 'bottom'"></div>
+        <div class="cut-c-point cut-p-left-bottom" @mousedown="direction = 'left-bottom'" @touchstart="direction = 'left-bottom'"></div>
         </template>
       </div>
       </template>
@@ -163,9 +165,15 @@ export default {
   },
   methods: {
     selection (e) {
+      e = e.touches ? e.touches[0] : e
       if (this.lockViewSize) return false
       const target = e
       const that = this
+      if (!e.offsetX) {
+        let clientRect = e.target.getBoundingClientRect()
+        e.offsetX = e.clientX - clientRect.x
+        e.offsetY = e.clientY - clientRect.y
+      }
       const start = {
         clientX: e.clientX,
         clientY: e.clientY,
@@ -174,6 +182,7 @@ export default {
       }
       // console.log('selection', e.offsetX, e.offsetY)
       function move (e) {
+        e = e.touches ? e.touches[0] : e
         that.showSelection = true
         const offsetX = e.clientX - start.clientX
         const offsetY = e.clientY - start.clientY
@@ -189,12 +198,17 @@ export default {
       function mouseup () {
         target.target.removeEventListener('mousemove', move)
         target.target.removeEventListener('mouseup', mouseup)
+        target.target.removeEventListener('touchmove', move)
+        target.target.removeEventListener('touchend', mouseup)
       }
       target.target.addEventListener('mousemove', move, false)
       target.target.addEventListener('mouseup', mouseup, false)
+      target.target.addEventListener('touchmove', move, false)
+      target.target.addEventListener('touchend', mouseup, false)
     },
     handleMove (e) {
       // console.log('move', e)
+      e = e.touches ? e.touches[0] : e
       var offsetX = e.clientX - this.startPoint.clientX
       var offsetY = e.clientY - this.startPoint.clientY
       // 移动视区
@@ -246,6 +260,7 @@ export default {
     },
     contrlClick (e) {
       // 记录鼠标按下点信息
+      e = e.touches ? e.touches[0] : e
       this.startPoint = {
         clientX: e.clientX,
         clientY: e.clientY,
@@ -264,18 +279,24 @@ export default {
         })
         document.removeEventListener('mousemove', that.handleMove)
         document.removeEventListener('mouseup', mouseup)
+        document.removeEventListener('touchmove', that.handleMove)
+        document.removeEventListener('touchend', mouseup)
       }
       document.addEventListener('mousemove', this.handleMove, false)
       document.addEventListener('mouseup', mouseup, false)
+      document.addEventListener('touchmove', this.handleMove, false)
+      document.addEventListener('touchend', mouseup, false)
     },
     viewClick (e) {
       // console.log('view click')
+      e = e.touches ? e.touches[0] : e
       this.moveType = 'move'
       this.contrlClick(e)
     },
     ctrlClick (e) {
       // console.log('ctrl click', this.direction)
       this.moveType = 'size'
+      e = e.touches ? e.touches[0] : e
       this.contrlClick(e)
     },
     getCutInfo () {
